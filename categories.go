@@ -19,9 +19,9 @@ type Count struct {
 }
 
 // Offer is the model for the item
-type Offer struct {
-	Name string
-}
+//type Offer struct {
+//	Name string
+//}
 
 func isError(err error) bool {
 	if err != nil {
@@ -37,7 +37,10 @@ func get(url string, target interface{}) error {
 
 	if isError(err) { return err }
 
-	defer resp.Body.Close()
+	defer func() {
+		err = resp.Body.Close()
+		if isError(err) { return }
+	}()
 
 	err = json.NewDecoder(resp.Body).Decode(target)
 
